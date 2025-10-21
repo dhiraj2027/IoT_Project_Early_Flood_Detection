@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Live IoT Dashboard</title>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h2 { color: #0077cc; }
+    .data { font-size: 1.2em; margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h2>Live Sensor Data</h2>
+  <div class="data">🌡️ Temperature: <span id="temperature">--</span> °C</div>
+  <div class="data">💧 Humidity: <span id="humidity">--</span> %</div>
+  <div class="data">📏 Distance: <span id="distance">--</span> cm</div>
+  <div class="data">🚿 Flow Rate: <span id="flowRate">--</span> L/min</div>
+  <div class="data">🧪 Total Volume: <span id="totalMilliLitres">--</span> mL</div>
+
+  <script>
+    const socket = io();
+    socket.on('sensorUpdate', data => {
+      document.getElementById('temperature').textContent = data.temperature;
+      document.getElementById('humidity').textContent = data.humidity;
+      document.getElementById('distance').textContent = data.distance;
+      document.getElementById('flowRate').textContent = data.flowRate;
+      document.getElementById('totalMilliLitres').textContent = data.totalMilliLitres;
+    });
+  </script>
+</body>
+</html>
