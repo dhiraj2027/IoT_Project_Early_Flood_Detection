@@ -8,9 +8,10 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server);
 
+let latestSensorData = null;
+
 // Use environment variable for port (Render sets this automatically)
 const PORT = process.env.PORT || 3000;
-
 // Parse JSON bodies
 app.use(bodyParser.json());
 
@@ -24,8 +25,15 @@ app.post('/sensor-data', (req, res) => {
 
   // Emit to frontend via Socket.IO
   io.emit('sensorUpdate', data);
-
+  latestSensorData = data;
   res.status(200).send('Data received');
+});
+
+app.get('/live-data', (req, res) => {
+  if (!latestSensorData) {
+    return res.status(200).json({ data: null, message: 'No live data yet' });
+  }
+  res.status(200).json({ data: latestSensorData });
 });
 
 // Serve index.html for root route
